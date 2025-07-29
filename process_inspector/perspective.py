@@ -12,6 +12,7 @@ class Perspective:
         """
         self.dfg = dfg
         self.activities = None
+        self.stats = None
         self.node_label = {}
         self.node_color = {}
         self.edge_color = {}

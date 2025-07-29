@@ -37,11 +37,11 @@ class ActivityLog:
         self.inv_mapping = df.groupby('activity')
         
         #self.activity_log = df[['case','activity']].groupby('case').agg(list)
-        try:
-            df['time'] = pd.to_datetime(df['time'].astype(float), unit='s')
-        except ValueError:
-            logger.warning("[ACTIVITY_LOG] 'time' does not include date.")
-            pass
+        # try:
+        #     df['time'] = pd.to_datetime(df['time'].astype(float), unit='s')
+        # except ValueError:
+        #     logger.warning("[ACTIVITY_LOG] 'time' does not include date.")
+        #     pass
         df_ = pm4py.format_dataframe(df[['case', 'activity', 'time']].copy(),case_id='case',activity_key='activity',timestamp_key='time')        
         self.activity_log = pm4py.convert_to_event_log(df_)
         del df_
