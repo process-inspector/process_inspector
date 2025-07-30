@@ -14,7 +14,7 @@ if __name__ == "__main__":
     print(dfg.inv_mapping)
     print(dfg.ready)
     if dfg.inv_mapping:
-        for name, group in dfg.inv_mapping:
+        for name, group in dfg.inv_mapping.items():
             print(name)
             print(group)
             break

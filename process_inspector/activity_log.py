@@ -35,6 +35,7 @@ class ActivityLog:
         df = pd.concat(results, ignore_index=True)
         self.num_events = df.shape[0]
         self.inv_mapping = df.groupby('activity')
+        self.inv_mapping = {activity: df for activity, df in self.inv_mapping}  # Convert to dict for easier access
         
         #self.activity_log = df[['case','activity']].groupby('case').agg(list)
         # try:
@@ -61,6 +62,7 @@ class ActivityLog:
         df = el[el['activity'].notna()]
         self.num_events = df.shape[0]
         self.inv_mapping = df.groupby('activity')
+        self.inv_mapping = {activity: df for activity, df in self.inv_mapping}
         #self.activity_log = df[['case','activity']].groupby('case').agg(list)
         df_ = pm4py.format_dataframe(df[['case', 'activity', 'time']].copy(),case_id='case',activity_key='activity',timestamp_key='time')
         self.activity_log = pm4py.convert_to_event_log(df_)

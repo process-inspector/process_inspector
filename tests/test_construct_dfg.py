@@ -4,6 +4,7 @@ from process_inspector.dfg import DFG
 from process_inspector.activity_log import ActivityLog
 
 import sys
+import os
 
 if __name__ == "__main__":
     # Example test (from root directory):
@@ -17,6 +18,12 @@ if __name__ == "__main__":
     print(dfg.dfg)
     
     inv_map = dfg.inv_mapping
-    print(inv_map.get_group(next(iter(inv_map.groups))))
+    for activity, df in inv_map.items():
+        print(f"Activity: {activity}, DataFrame:\n {df}")
+        break
     
-    dfg.save('tmp/')
+    outdir = os.path.join(os.path.dirname(otf2_file), 'process_inspector')
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+        
+    dfg.save(outdir)

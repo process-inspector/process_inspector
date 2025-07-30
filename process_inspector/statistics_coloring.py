@@ -4,14 +4,14 @@ from .perspective import Perspective
 class StatisticsColoring(Perspective):
     def __init__(self, dfg):
         super().__init__(dfg)
-        self.activities = list(dfg.inv_mapping.groups.keys())
+        self.activities = list(dfg.inv_mapping.keys())
         self.color_by = 'count'
         self.stats = None
         
     
     def compute_stats(self, inv_mapping):
         result = []
-        for activity, df in inv_mapping:
+        for activity, df in inv_mapping.items():
             count = df.shape[0]
             result.append({
                 'activity':activity,

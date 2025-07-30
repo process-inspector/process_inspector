@@ -16,6 +16,7 @@ class DFG:
         self.fm = None
         self.inv_mapping = None
         self.ready = False
+        self.id = None
         
         if activity_log:
             self.construct(activity_log)
