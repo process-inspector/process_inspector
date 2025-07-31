@@ -22,7 +22,7 @@ if __name__ == "__main__":
         print(f"Activity: {activity}, DataFrame:\n {df}")
         break
     
-    outdir = os.path.join(os.path.dirname(otf2_file), 'process_inspector')
+    outdir = os.path.join('tmp')
     if not os.path.exists(outdir):
         os.makedirs(outdir)
         

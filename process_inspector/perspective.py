@@ -11,7 +11,7 @@ class Perspective:
             dfg: The Directed Flow Graph to be used in this perspective.
         """
         self.dfg = dfg
-        self.activities = None
+        self.activities = list(dfg.inv_mapping.keys())
         self.stats = None
         self.node_label = {}
         self.node_color = {}
@@ -48,12 +48,12 @@ class Perspective:
         graph.node(end, shape='doublecircle', fontsize="30")
 
         for activity, val in self.dfg.im.items():
-            graph.edge(start, activity, label=str(val))
+            graph.edge(start, activity, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
         for edge, _ in self.dfg.dfg.items():
             graph.edge(edge[0], edge[1], label=self.edge_label[edge], penwidth=str(self.edge_penwidth[edge]), color=self.edge_color[edge])
 
         for activity, val in self.dfg.fm.items():
-            graph.edge(activity, end, label=str(val))
+            graph.edge(activity, end, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
         return graph

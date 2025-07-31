@@ -63,10 +63,10 @@ class DFG:
         
         if not os.path.exists(dfg_file):
             logger.error(f"DFG file {dfg_file} does not exist.")
-            return False
+            raise FileNotFoundError(f"DFG file {dfg_file} does not exist.")
         if not os.path.exists(inv_mapping_file):
             logger.error(f"Inverse mapping file {inv_mapping_file} does not exist.")
-            return False
+            raise FileNotFoundError(f"Inverse mapping file {inv_mapping_file} does not exist.")
         
         try:
             with open(dfg_file, 'rb') as f:
@@ -78,10 +78,10 @@ class DFG:
                 self.inv_mapping = pickle.load(f)
             logger.info(f"DFG restored from {dfg_file} and {inv_mapping_file}")
             self.ready = True
-            return True
+            
         except Exception as e:
             logger.error(f"Error restoring DFG: {e}")
-            return False
+            raise e
         
         
 
