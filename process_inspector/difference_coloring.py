@@ -5,9 +5,12 @@ from .dfg import DFG
 from .perspective import Perspective
 
 class DifferenceColoring(Perspective):
-    def __init__(self, dfg1, dfg2):
-        dfg = add_dfgs(dfg1, dfg2)
-        super().__init__(dfg)
+    def __init__(self, dfg1, dfg2,dfg_combined=None):
+        
+        if dfg_combined is None:
+            dfg_combined = add_dfgs(dfg1, dfg2)
+        super().__init__(dfg_combined)
+        
         self.diff = diff_dfgs(dfg1, dfg2)
         self.stats = None
         

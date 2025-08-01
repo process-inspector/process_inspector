@@ -2,4 +2,4 @@ numpy
 pandas
 graphviz
 pm4py==2.7.9.1
-#partial_ranker @ git+https://github.com/HPAC/PartialRanker
+partial_ranker @ git+https://github.com/HPAC/PartialRanker
