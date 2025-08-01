@@ -27,7 +27,7 @@ if __name__ == "__main__":
         df['perf'] = np.where(df['duration'] == 0, None, (df['msg_size']/ df['duration'])*1000)
     
     
-    ranks = compute_partial_ranks(dfg,group_by='id', on='perf')
+    ranks = compute_partial_ranks(dfg.inv_mapping, group_by='id', on='perf')
     for activity, rank in ranks.items():
         print(f'{activity}: {rank['rank_str']}')
         # print(rank['m1'])

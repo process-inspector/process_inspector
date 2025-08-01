@@ -1,8 +1,8 @@
 from partial_ranker import QuantileComparer, PartialRanker, Method
 
-def compute_partial_ranks(dfg, group_by, on):
+def compute_partial_ranks(inv_mapping, group_by, on):
     ranks = {}
-    for activity, df in dfg.inv_mapping.items():
+    for activity, df in inv_mapping.items():
         measurements =  df.groupby(group_by)[on].apply(lambda x: [float(v) for v in x if v is not None]).to_dict()
         
         ranks[activity] = {}

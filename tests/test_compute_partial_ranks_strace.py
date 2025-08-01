@@ -25,6 +25,6 @@ if __name__ == "__main__":
     for activity, df in dfg.inv_mapping.items():
        df['perf'] = np.where(df['bytes'] == 0, None, df['duration'] * 1e6 / df['bytes'])
     
-    ranks = compute_partial_ranks(dfg,group_by='id', on='perf')
+    ranks = compute_partial_ranks(dfg.inv_mapping ,group_by='id', on='perf')
     for activity, rank in ranks.items():
         print(f'{activity}: {rank['rank_str']}')
