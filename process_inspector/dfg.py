@@ -17,6 +17,7 @@ class DFG:
         self.inv_mapping = None
         self.ready = False
         self.id = None
+        self.info = {} # for additional information related to the DFG
         
         if activity_log:
             self.construct(activity_log)
@@ -45,7 +46,7 @@ class DFG:
         try:
             if self.ready:
                 with open(dfg_file, 'wb') as f:
-                    pickle.dump({'dfg':self.dfg, 'im':self.im, 'fm':self.fm}, f)
+                    pickle.dump({'dfg':self.dfg, 'im':self.im, 'fm':self.fm, 'info':self.info}, f)
                 with open(inv_mapping_file, 'wb') as f:
                     pickle.dump(self.inv_mapping, f)
                 logger.info(f"DFG saved to {dfg_file} and {inv_mapping_file}")
@@ -74,6 +75,7 @@ class DFG:
                 self.dfg = data['dfg']
                 self.im = data['im']
                 self.fm = data['fm']
+                self.info = data.get('info', {})
             with open(inv_mapping_file, 'rb') as f:
                 self.inv_mapping = pickle.load(f)
             logger.info(f"DFG restored from {dfg_file} and {inv_mapping_file}")
