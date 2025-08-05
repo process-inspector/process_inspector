@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 
 
-def compute_partial_ranks(measurements,q_max=75, q_min=25):
+def compute_partial_ranks(measurements,q_max=75, q_min=25, remove_outliers=True):
     cm = QuantileComparer(measurements)
-    cm.compute_quantiles(q_max=q_max, q_min=q_min)
+    cm.compute_quantiles(q_max=q_max, q_min=q_min, outliers=remove_outliers)
     cm.compare()
     pr = PartialRanker(cm)
     
@@ -31,7 +31,7 @@ def compute_partial_ranks(measurements,q_max=75, q_min=25):
     }
     
 
-def compute_activity_ranks(inv_mapping, group_by, on, q_max=75, q_min=25):
+def compute_activity_ranks(inv_mapping, group_by, on, q_max=75, q_min=25, remove_outliers=True):
     ranks = {}
     for activity, df in inv_mapping.items():
         measurements =  df.groupby(group_by)[on].apply(lambda x: [float(v) for v in x if pd.notna(v)]).to_dict()
@@ -39,7 +39,7 @@ def compute_activity_ranks(inv_mapping, group_by, on, q_max=75, q_min=25):
         ranks[activity] = {}
         ranks[activity]['measurements'] = measurements
         
-        rank_data = compute_partial_ranks(measurements, q_max=q_max, q_min=q_min)
+        rank_data = compute_partial_ranks(measurements, q_max=q_max, q_min=q_min, remove_outliers=remove_outliers)
         for k, v in rank_data.items():
             ranks[activity][k] = v
     
