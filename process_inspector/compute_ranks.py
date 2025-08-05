@@ -1,5 +1,6 @@
 from partial_ranker import QuantileComparer, PartialRanker, Method
 import numpy as np
+import pandas as pd
 
 
 def compute_partial_ranks(measurements,q_max=75, q_min=25):
@@ -33,8 +34,8 @@ def compute_partial_ranks(measurements,q_max=75, q_min=25):
 def compute_activity_ranks(inv_mapping, group_by, on, q_max=75, q_min=25):
     ranks = {}
     for activity, df in inv_mapping.items():
-        measurements =  df.groupby(group_by)[on].apply(lambda x: [float(v) for v in x if v is not np.nan]).to_dict()
-        
+        measurements =  df.groupby(group_by)[on].apply(lambda x: [float(v) for v in x if pd.notna(v)]).to_dict()
+        # print(measurements)
         ranks[activity] = {}
         ranks[activity]['measurements'] = measurements
         
