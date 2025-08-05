@@ -1,6 +1,6 @@
 from process_inspector.dfg import DFG
 from process_inspector.add_dfgs import add_dfgs
-from process_inspector.compute_partial_ranks import compute_partial_ranks
+from process_inspector.compute_ranks import compute_activity_ranks
 from pathlib import Path
 import sys
 import numpy as np
@@ -9,7 +9,7 @@ from partial_ranker import MeasurementsVisualizer
 
 if __name__ == "__main__":
     # Example test (from root directory):
-    
+    #  python -m tests.test_compute_partial_ranks_scorep examples/dfgs/hpcg_1N/ examples/dfgs/hpcg_2N/
     data_dir1 = sys.argv[1]
     data_dir2 = sys.argv[2]
     
@@ -24,18 +24,18 @@ if __name__ == "__main__":
     dfg = add_dfgs(dfg1, dfg2)
     
     for activity, df in dfg.inv_mapping.items():
-        df['perf'] = np.where(df['duration'] == 0, None, (df['msg_size']/ df['duration'])*1000)
+        df['perf'] = np.where(df['duration'] == 0, np.nan, (df['msg_size']/ df['duration'])*1000)
     
     
-    ranks = compute_partial_ranks(dfg.inv_mapping, group_by='id', on='perf')
-    for activity, rank in ranks.items():
-        print(f'{activity}: {rank['rank_str']}')
+    activity_ranks = compute_activity_ranks(dfg.inv_mapping, group_by='id', on='perf')
+    for activity, rank in activity_ranks.items():
+        print(f'{activity}: {rank['nranks']}')
         # print(rank['m1'])
     
     print("\nDetails of activity 'MPI_Send/MPI_Irecv (2048B)':")    
-    for variant, vals in ranks['MPI_Send/MPI_Irecv (2048B)']['measurements'].items():
+    for variant, vals in activity_ranks['MPI_Send/MPI_Irecv (2048B)']['measurements'].items():
         print(f"Variant: {variant}, Mean: {np.mean(vals)} len: {len(vals)}")
-    mv = MeasurementsVisualizer(ranks['MPI_Send/MPI_Irecv (2048B)']['measurements'])
+    mv = MeasurementsVisualizer(activity_ranks['MPI_Send/MPI_Irecv (2048B)']['measurements'])
     fig = mv.show_measurements_boxplots()
     fig.tight_layout()
     fig.savefig('tmp/boxplots.svg',format="svg", bbox_inches='tight')

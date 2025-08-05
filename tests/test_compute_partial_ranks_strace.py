@@ -1,6 +1,6 @@
 from process_inspector.dfg import DFG
 from process_inspector.add_dfgs import add_dfgs
-from process_inspector.compute_partial_ranks import compute_partial_ranks
+from process_inspector.compute_ranks import compute_activity_ranks
 from pathlib import Path
 import sys
 import numpy as np
@@ -8,6 +8,7 @@ import numpy as np
 if __name__ == "__main__":
     # Example test (from root directory):
     
+    # python -m tests.test_compute_partial_ranks_strace examples/dfgs/rw_ls/ examples/dfgs/rw_ls_l/
     data_dir1 = sys.argv[1]
     data_dir2 = sys.argv[2]
     
@@ -23,8 +24,8 @@ if __name__ == "__main__":
     
     # perf indicator
     for activity, df in dfg.inv_mapping.items():
-       df['perf'] = np.where(df['bytes'] == 0, None, df['duration'] * 1e6 / df['bytes'])
+       df['perf'] = np.where(df['bytes'] == 0, np.nan, df['duration'] * 1e6 / df['bytes'])
     
-    ranks = compute_partial_ranks(dfg.inv_mapping ,group_by='id', on='perf')
-    for activity, rank in ranks.items():
-        print(f'{activity}: {rank['rank_str']}')
+    activity_ranks = compute_activity_ranks(dfg.inv_mapping ,group_by='id', on='perf')
+    for activity, rank in activity_ranks.items():
+        print(f'{activity}: {rank['nranks']}')
