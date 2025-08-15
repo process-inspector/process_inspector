@@ -13,14 +13,18 @@ if __name__ == "__main__":
     trace_file = sys.argv[1]
     df, meta_data = prepare_event_log(trace_file)
     el = EventLog(df, case_key='case', order_key='time', obj_key='obj')
+    print(el.df)
+    print(f"Num events: {el.n_events}, Num cases: {el.n_cases}")
     
-    activity_log = ActivityLog(el, 4, f_call)    
-    dfg = DFG(activity_log)
-    print(dfg.dfg)
+    activity_log = ActivityLog(el, 4, f_call)   
     
+
     
-    outdir = os.path.join('tmp')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
+    inv_map = activity_log.inv_mapping
+    for activity, df in inv_map.items():
+        print(f"Activity: {activity}, DataFrame:\n {df}")
+        break
         
-    dfg.save(outdir)
+    print(f"Num activities: {activity_log.n_activities}, Num variants: {activity_log.n_variants}") 
+        
+    

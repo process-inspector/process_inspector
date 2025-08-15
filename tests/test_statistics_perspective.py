@@ -1,5 +1,5 @@
 from process_inspector.dfg import DFG
-from process_inspector.statistics_coloring import StatisticsColoring
+from process_inspector.statistics_perspective import StatisticsPerspective
 import sys
 import os
 
@@ -11,7 +11,7 @@ if __name__ == "__main__":
     dfg = DFG()
     dfg.restore(data_dir)
     
-    perspective = StatisticsColoring(dfg)
+    perspective = StatisticsPerspective(dfg)
     perspective.create_style()
     graph = perspective.prepare_digraph(rankdir='TD')
     print(graph)

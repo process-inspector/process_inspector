@@ -1,7 +1,7 @@
 import pandas as pd
 from .perspective import Perspective
 
-class StatisticsColoring(Perspective):
+class StatisticsPerspective(Perspective):
     def __init__(self, dfg):
         super().__init__(dfg)
         self.color_by = 'count'
