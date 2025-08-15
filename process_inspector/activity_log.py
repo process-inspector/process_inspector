@@ -23,7 +23,7 @@ class ActivityLog:
         
         start = time.time()
         
-        chunks = np.array_split(el.df, self.n_cpu)  
+        chunks = np.array_split(el.events, self.n_cpu)  
         with mp.Pool(processes=self.n_cpu) as pool:
             func = partial(self._apply_classifier, **kwargs)
             results = pool.map(func, chunks)    

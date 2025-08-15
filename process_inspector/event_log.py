@@ -1,6 +1,6 @@
 class EventLog:
     def __init__(self, events_df, obj_key, case_key, order_key):
-        self.df = events_df
+        self.events = events_df
 
         self.case_key = case_key
         self.order_key = order_key
@@ -8,14 +8,10 @@ class EventLog:
                
         # self._sanity_check()
         
-        self.n_events = len(self.df)
-        self.n_cases = len(self.df[self.case_key].unique())
-        
-        if self.obj_key in self.df.columns:
-            self.n_objs = len(self.df[self.obj_key].unique())
-        else:
-            self.n_objs = 1
-            
+        self.n_events = len(self.events)
+        self.n_cases = len(self.events[self.case_key].unique())
+        self.n_objs = len(self.events[self.obj_key].unique())
+                    
         
     def _sanity_check(self):
         pass
@@ -44,7 +40,7 @@ class MetaData:
         try:
            value = self.case_attr[case][attr]
         except KeyError as e:
-            raise KeyError(f"Error: {e} for case {case} and attribute {attr}") 
+            pass
         return value
     
     def get_obj_attr(self, obj, attr):
@@ -52,5 +48,5 @@ class MetaData:
         try:
             value = self.obj_attr[obj][attr]
         except KeyError as e:
-            raise KeyError(f"Error: {e} for object {obj} and attribute {attr}") 
+            pass
         return value

@@ -1,6 +1,5 @@
-from linnea_inspector.event_log.prepare_event_log import prepare_event_log
-from linnea_inspector.mappings.f_call import f_call
-from process_inspector.event_log import EventLog
+from linnea_inspector.event_data import prepare
+from linnea_inspector.classifiers.f_call import f_call
 from process_inspector.dfg import DFG
 from process_inspector.activity_log import ActivityLog
 
@@ -11,9 +10,8 @@ if __name__ == "__main__":
     # Example test (from root directory):
     
     trace_file = sys.argv[1]
-    df, meta_data = prepare_event_log(trace_file)
-    el = EventLog(df, case_key='case', order_key='time', obj_key='obj')
-    print(el.df)
+    el, meta_data = prepare(trace_file)
+    print(el.events)
     print(f"Num events: {el.n_events}, Num cases: {el.n_cases}")
     
     activity_log = ActivityLog(el, 4, f_call)   

@@ -12,7 +12,7 @@ def add_dfgs(*dfgs):
         combined_im.update(dfg.im)
         combined_fm.update(dfg.fm)
         for activity, df in dfg.inv_mapping.items():
-            df['id'] = dfg.id  # Ensure each activity has the DFG ID
+            # df['el:id'] = dfg.id  # Ensure each activity has the DFG ID
             if activity not in inv_mapping:
                 inv_mapping[activity] = df
             else:
