@@ -1,4 +1,5 @@
 from process_inspector.dfg import DFG
+from process_inspector.model_data_utils import load_model_data
 import sys
 
 if __name__ == "__main__":
@@ -7,15 +8,15 @@ if __name__ == "__main__":
     data_dir = sys.argv[1]
     
     dfg = DFG()
-    dfg.restore(data_dir)
-    print(dfg.dfg)
+    dfg, activity_events, meta_data = load_model_data(data_dir, dfg)
+
+    print(dfg.nodes)
+    print(dfg.edges)
     print(dfg.im)
     print(dfg.fm)
-    print(dfg.inv_mapping)
+    print(activity_events)
+    print(meta_data.case_attr)
+    print(meta_data.obj_attr)
     print(dfg.ready)
-    if dfg.inv_mapping:
-        for name, group in dfg.inv_mapping.items():
-            print(name)
-            print(group)
-            break
+
     
