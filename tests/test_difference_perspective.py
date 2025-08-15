@@ -1,5 +1,5 @@
 from process_inspector.dfg import DFG
-from process_inspector.difference_coloring import DifferenceColoring
+from process_inspector.difference_perspective import DifferencePerspective
 import sys
 import os
 from pathlib import Path
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     dfg2.restore(data_dir2)
     dfg2.id = Path(data_dir2).name  # Use directory name as ID
     
-    perspective = DifferenceColoring(dfg1, dfg2)
+    perspective = DifferencePerspective(dfg1, dfg2)
     perspective.create_style()
     graph = perspective.prepare_digraph(rankdir='TD')
     print(graph)

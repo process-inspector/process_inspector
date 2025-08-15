@@ -1,6 +1,6 @@
 class EventLog:
-    def __init__(self, df, obj_key, case_key, order_key):
-        self.df = df
+    def __init__(self, events_df, obj_key, case_key, order_key):
+        self.df = events_df
 
         self.case_key = case_key
         self.order_key = order_key

@@ -4,7 +4,7 @@ from .diff_dfgs import diff_dfgs
 from .dfg import DFG
 from .perspective import Perspective
 
-class DifferenceColoring(Perspective):
+class DifferencePerspective(Perspective):
     def __init__(self, dfg1, dfg2,dfg_combined=None):
         
         if dfg_combined is None:
