@@ -2,9 +2,9 @@ import pandas as pd
 from .add_dfgs import add_dfgs
 from .diff_dfgs import diff_dfgs
 from .dfg import DFG
-from .perspective import Perspective
+from .perspective import DFGPerspective
 
-class DifferencePerspective(Perspective):
+class DFGDifferencePerspective(DFGPerspective):
     def __init__(self, dfg1, dfg2,dfg_combined=None):
         
         if dfg_combined is None:
@@ -12,7 +12,6 @@ class DifferencePerspective(Perspective):
         super().__init__(dfg_combined)
         
         self.diff = diff_dfgs(dfg1, dfg2)
-        self.stats = None
         
         self.default_node_color = "#FFFFFF"
         self.default_edge_color = "#000000"
@@ -23,34 +22,21 @@ class DifferencePerspective(Perspective):
         self.edge_red_hex = "#E53935"
         self.edge_green_hex = "#2E7D32"
         
-    
-    def compute_stats(self, inv_mapping):
-        result = []
-        for activity, df in inv_mapping.items():
-            count = df.shape[0]
-            result.append({
-                'activity':activity,
-                'count': count,
-            })
-        self.stats = pd.DataFrame(result)
-    
-    def _format_label_str(self, row):
-        label_str = f"{row['activity']}"
-        return label_str
+        for activity in self.dfg.nodes:
+            self.node_label[activity] = activity
+        
+        
         
     def create_style(self):
-        self.compute_stats(self.dfg.inv_mapping)
-        self.stats['label_str'] = self.stats.apply(self._format_label_str, axis=1)
-        self.node_label = self.stats.set_index('activity')['label_str'].to_dict()
         
-        for node in self.activities:
+        for node in self.dfg.nodes:
             self.node_color[node] = self.default_node_color
             if node in self.diff.unique_nodes1:
                 self.node_color[node] = self.node_green_hex
             elif node in self.diff.unique_nodes2:
                 self.node_color[node] = self.node_red_hex
                 
-        for edge, label in self.dfg.dfg.items():
+        for edge, label in self.dfg.edges.items():
             self.edge_color[edge] = self.default_edge_color
             if edge in self.diff.unique_edges1:
                 self.edge_color[edge] = self.edge_green_hex

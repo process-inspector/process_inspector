@@ -3,8 +3,7 @@ from linnea_inspector.classifiers.f_call import f_call
 from process_inspector.dfg.dfg import DFG
 from process_inspector.event_log import EventLog
 from process_inspector.activity_log import ActivityLog
-from process_inspector.model_data_utils import save_model_data
-
+from process_inspector.dfg.perspective import DFGPerspective
 import sys
 import os
 
@@ -17,13 +16,14 @@ if __name__ == "__main__":
     
     activity_log = ActivityLog(event_log, 4, f_call)    
     dfg = DFG(activity_log)
-    print(dfg.im)
-    print(dfg.fm)
-    print(dfg.edges)
     
     
-    outdir = os.path.join('tmp')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-        
-    save_model_data(outdir, dfg, activity_log.activity_events, meta_data)
+    perspective = DFGPerspective(dfg)
+    perspective.create_style()
+    graph = perspective.prepare_digraph(rankdir='TD')
+    print(graph)
+    graph.render(os.path.join('tmp', 'dfg'), format='svg', cleanup=True)
+    
+    
+    
+    

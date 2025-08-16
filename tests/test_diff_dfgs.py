@@ -1,20 +1,30 @@
+from linnea_inspector.event_data  import prepare
+from linnea_inspector.classifiers.f_call import f_call
+
+from process_inspector.event_log import EventLog
+from process_inspector.activity_log import ActivityLog
+
+from process_inspector.dfg.dfg import DFG
+from process_inspector.dfg.diff_dfgs import diff_dfgs
+
 import sys
-from process_inspector.dfg import DFG
-from process_inspector.diff_dfgs import diff_dfgs
-from pathlib import Path
+import os
 
 if __name__ == "__main__":
+    # Example test (from root directory):
     
-    data_dir1 = sys.argv[1]
-    data_dir2 = sys.argv[2]
+    trace_file1 = sys.argv[1]
+    trace_file2 = sys.argv[2]
     
-    dfg1 = DFG()
-    dfg1.restore(data_dir1)
-    dfg1.id = Path(data_dir1).name  # Use directory name as ID
+    event_data, meta_data = prepare(trace_file1)
+    event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
+    activity_log = ActivityLog(event_log, 4, f_call)    
+    dfg1 = DFG(activity_log)
     
-    dfg2 = DFG()
-    dfg2.restore(data_dir2)
-    dfg2.id = Path(data_dir2).name  # Use directory name as ID
+    event_data, meta_data = prepare(trace_file2)
+    event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
+    activity_log = ActivityLog(event_log, 4, f_call)    
+    dfg2 = DFG(activity_log)
     
     diff = diff_dfgs(dfg1, dfg2)
     print(diff)

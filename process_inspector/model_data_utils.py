@@ -1,6 +1,7 @@
 
 import pickle
 import os
+import pandas as pd
         
         
 def save_model_data(data_dir, process_model, activity_events, meta_data=None):
@@ -39,4 +40,13 @@ def load_model_data(data_dir, process_model):
             meta_data = pickle.load(f)
         
     return process_model, activity_events, meta_data
-    
+
+def concat_activity_events(*activity_events):
+    combined = {}
+    for ae in activity_events:
+        for activity, df in ae.items():
+            if activity not in combined:
+                combined[activity] = df
+            else:
+                combined[activity] = pd.concat([combined[activity], df], ignore_index=True)
+    return combined    

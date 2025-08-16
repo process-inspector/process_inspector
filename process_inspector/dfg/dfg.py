@@ -26,7 +26,7 @@ class DFG:
     
     def construct(self, activity_log):
         start = time.time()
-        self.nodes = list(activity_log.activity_events.keys())
+        self.nodes = set(activity_log.activity_events.keys())
         # self.edges,self.im,self.fm = pm4py.discover_dfg(activity_log.activity_log)
         self.edges,self.im,self.fm = self.discover_dfg(activity_log.activity_log)
         end = time.time()

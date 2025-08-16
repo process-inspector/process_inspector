@@ -1,32 +1,38 @@
 import pandas as pd
-from .perspective import Perspective
+from .perspective import DFGPerspective
 
-class StatisticsPerspective(Perspective):
-    def __init__(self, dfg):
+class DFGStatisticsPerspective(DFGPerspective):
+    def __init__(self, dfg, activity_events):
         super().__init__(dfg)
+        
+        #check if nodes of dfg and activity_events keys match
+        if not set(self.dfg.nodes).issubset(set(activity_events.keys())):
+            raise ValueError("DFG nodes must be a subset of activity events keys.")
+        
+        
         self.color_by = 'count'
-        self.stats = None
+        self.stats = self._compute_stats(activity_events)
+        self.stats['label_str'] = self.stats.apply(self._format_label_str, axis=1)
+        self.node_label = self.stats.set_index('activity')['label_str'].to_dict()
         
     
-    def compute_stats(self, inv_mapping):
+    def _compute_stats(self, activity_events):
         result = []
-        for activity, df in inv_mapping.items():
-            count = df.shape[0]
+        for activity, events_df in activity_events.items():
+            count = events_df.shape[0]
             result.append({
                 'activity':activity,
                 'count': count,
             })
-        self.stats = pd.DataFrame(result)
+        return pd.DataFrame(result)
     
     def _format_label_str(self, row):
-        label_str = f"{row['activity']}"
+        label_str = f"{row['activity']} ({row['count']})"
         return label_str
         
     def create_style(self):
-        self.compute_stats(self.dfg.inv_mapping)
-        self.stats['label_str'] = self.stats.apply(self._format_label_str, axis=1)
-        self.node_label = self.stats.set_index('activity')['label_str'].to_dict()
-        for edge, label in self.dfg.dfg.items():
+
+        for edge, label in self.dfg.edges.items():
             self.edge_color[edge] = "#000000"
             self.edge_penwidth[edge] = 1.0
             self.edge_label[edge] = str(label)

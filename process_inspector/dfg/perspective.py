@@ -1,8 +1,8 @@
-from abc import abstractmethod
+# from abc import abstractmethod
 from graphviz import Digraph
 
 
-class Perspective:
+class DFGPerspective:
     def __init__(self, dfg):
         """
         Initialize the Perspective with a Directed Flow Graph (DFG).
@@ -11,17 +11,34 @@ class Perspective:
             dfg: The Directed Flow Graph to be used in this perspective.
         """
         self.dfg = dfg
-        self.activities = list(dfg.inv_mapping.keys())
-        self.stats = None
         self.node_label = {}
         self.node_color = {}
         self.edge_color = {}
         self.edge_penwidth = {}
         self.edge_label = {}
         
-    @abstractmethod
+    
     def create_style(self):
-        pass
+        for activity in self.dfg.nodes:
+            self.node_label[activity] = activity
+        
+        for node in self.node_label:
+            self.node_color[node] = "#FFFFFF"
+            
+        for edge, label in self.dfg.edges.items():
+            self.edge_color[edge] = "#000000"
+            self.edge_penwidth[edge] = 1.0
+            self.edge_label[edge] = str(label)
+            
+        for im, label in self.dfg.im.items():
+            self.edge_color[im] = "#000000"
+            self.edge_penwidth[im] = 1.0
+            self.edge_label[im] = str(label)
+            
+        for fm, label in self.dfg.fm.items():
+            self.edge_color[fm] = "#000000"
+            self.edge_penwidth[fm] = 1.0
+            self.edge_label[fm] = str(label)
     
     def prepare_digraph(self, rankdir='LR'):
         """
@@ -42,7 +59,7 @@ class Perspective:
         graph.node_attr['shape'] = 'box'
         graph.node(start, shape='circle', fontsize="30")
         
-        for activity in self.activities:                      
+        for activity in self.dfg.nodes:                      
             graph.node(activity, label=self.node_label[activity], style='filled', fillcolor=self.node_color[activity], fontsize='12')
         
         graph.node(end, shape='doublecircle', fontsize="30")
@@ -50,7 +67,7 @@ class Perspective:
         for activity, val in self.dfg.im.items():
             graph.edge(start, activity, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
-        for edge, _ in self.dfg.dfg.items():
+        for edge, _ in self.dfg.edges.items():
             graph.edge(edge[0], edge[1], label=self.edge_label[edge], penwidth=str(self.edge_penwidth[edge]), color=self.edge_color[edge])
 
         for activity, val in self.dfg.fm.items():

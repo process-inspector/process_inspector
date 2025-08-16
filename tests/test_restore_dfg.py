@@ -1,4 +1,4 @@
-from process_inspector.dfg import DFG
+from process_inspector.dfg.dfg import DFG
 from process_inspector.model_data_utils import load_model_data
 import sys
 

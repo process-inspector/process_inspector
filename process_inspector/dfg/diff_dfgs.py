@@ -7,12 +7,12 @@ def get_unique_elements(list1, list2):
 
 def diff_dfgs(dfg1, dfg2):
 
-    nodes1 = list(dfg1.inv_mapping.keys())
-    nodes2 = list(dfg2.inv_mapping.keys())
+    nodes1 = dfg1.nodes
+    nodes2 = dfg2.nodes
     unique_nodes1, unique_nodes2 = get_unique_elements(nodes1, nodes2)
     
-    edges1 = dfg1.dfg.keys()
-    edges2 = dfg2.dfg.keys()
+    edges1 = dfg1.edges.keys()
+    edges2 = dfg2.edges.keys()
     unique_edges1, unique_edges2 = get_unique_elements(edges1, edges2)
     
 
