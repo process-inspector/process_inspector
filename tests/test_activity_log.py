@@ -11,7 +11,7 @@ if __name__ == "__main__":
     
     trace_file = sys.argv[1]
     event_data, meta_data = prepare(trace_file)
-    event_log = EventLog(event_data, case_key='iter', order_key='time', obj_key='alg')
+    event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     print(f"Num events: {event_log.n_events}, Num cases: {event_log.n_cases}")
     
     activity_log = ActivityLog(event_log, 4, f_call) 
