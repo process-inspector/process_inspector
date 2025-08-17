@@ -4,10 +4,10 @@ from process_inspector.event_log import EventLog
 import sys
 import os
 
-if __name__ == "__main__":
+def test():
     # Example test (from root directory):
     
-    trace_file = sys.argv[1]
+    trace_file = "examples/traces/gls/traces/algorithm0.traces"
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
@@ -21,4 +21,9 @@ if __name__ == "__main__":
         # break
     
     print(f"Num events: {event_log.n_events}, Num cases: {event_log.n_cases}, Num objects: {event_log.n_objs}")
+    
+    print("SUCCESS")
+
+if __name__ == "__main__":
+    test()
     

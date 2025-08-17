@@ -2,10 +2,10 @@ from process_inspector.dfg.dfg import DFG
 from process_inspector.model_data_utils import load_model_data
 import sys
 
-if __name__ == "__main__":
+def test():
     # Example test (from root directory):
     
-    data_dir = sys.argv[1]
+    data_dir = "tmp/"
     
     dfg = DFG()
     dfg, activity_events, meta_data = load_model_data(data_dir, dfg)
@@ -15,8 +15,13 @@ if __name__ == "__main__":
     print(dfg.im)
     print(dfg.fm)
     print(activity_events)
-    print(meta_data.case_attr)
-    print(meta_data.obj_attr)
+    print(meta_data.get_case_data())
+    print(meta_data.get_obj_data())
     print(dfg.ready)
+    print("SUCCESS")
+
+if __name__ == "__main__":
+    test()
+
 
     

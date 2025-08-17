@@ -2,6 +2,7 @@
 import pickle
 import os
 import pandas as pd
+from .meta_data import MetaData
         
         
 def save_model_data(data_dir, process_model, activity_events, meta_data=None):
@@ -49,4 +50,15 @@ def concat_activity_events(*activity_events):
                 combined[activity] = df
             else:
                 combined[activity] = pd.concat([combined[activity], df], ignore_index=True)
-    return combined    
+    return combined
+
+def concat_meta_data(*meta_data):
+    case_data = []
+    obj_data = []
+    for md in meta_data:
+        case_data.extend(md.case_data)
+        obj_data.extend(md.obj_data)
+    combined_meta_data = MetaData()
+    combined_meta_data.case_data = case_data
+    combined_meta_data.obj_data = obj_data
+    return combined_meta_data 

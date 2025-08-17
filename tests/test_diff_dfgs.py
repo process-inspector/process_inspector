@@ -10,11 +10,11 @@ from process_inspector.dfg.diff_dfgs import diff_dfgs
 import sys
 import os
 
-if __name__ == "__main__":
+def test():
     # Example test (from root directory):
     
-    trace_file1 = sys.argv[1]
-    trace_file2 = sys.argv[2]
+    trace_file1 = "examples/traces/gls/traces/algorithm0.traces"
+    trace_file2 = "examples/traces/gls/traces/algorithm5.traces"
     
     event_data, meta_data = prepare(trace_file1)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
@@ -28,3 +28,8 @@ if __name__ == "__main__":
     
     diff = diff_dfgs(dfg1, dfg2)
     print(diff)
+    print("SUCCESS")
+    
+
+if __name__ == "__main__":
+    test()

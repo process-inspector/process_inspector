@@ -7,10 +7,10 @@ from process_inspector.dfg.perspective import DFGPerspective
 import sys
 import os
 
-if __name__ == "__main__":
+def test():
     # Example test (from root directory):
     
-    trace_file = sys.argv[1]
+    trace_file = "examples/traces/gls/traces/algorithm0.traces"
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
@@ -23,6 +23,10 @@ if __name__ == "__main__":
     graph = perspective.prepare_digraph(rankdir='TD')
     print(graph)
     graph.render(os.path.join('tmp', 'dfg'), format='svg', cleanup=True)
+    print("SUCCESS")
+
+if __name__ == "__main__":
+    test()
     
     
     

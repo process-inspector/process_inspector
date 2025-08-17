@@ -8,10 +8,10 @@ from process_inspector.model_data_utils import save_model_data
 import sys
 import os
 
-if __name__ == "__main__":
+def test():
     # Example test (from root directory):
     
-    trace_file = sys.argv[1]
+    trace_file = "examples/traces/gls/traces/algorithm0.traces"
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
@@ -27,3 +27,8 @@ if __name__ == "__main__":
         os.makedirs(outdir)
         
     save_model_data(outdir, dfg, activity_log.activity_events, meta_data)
+    print("SUCCESS")
+    
+
+if __name__ == "__main__":
+    test()
