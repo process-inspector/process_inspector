@@ -2,7 +2,7 @@ import pandas as pd
 from .perspective import DFGPerspective
 
 class DFGStatisticsPerspective(DFGPerspective):
-    def __init__(self, dfg, activity_events):
+    def __init__(self, dfg, activity_events, *stats_args, **stats_kwargs):
         super().__init__(dfg)
         
         #check if nodes of dfg and activity_events keys match
@@ -11,12 +11,12 @@ class DFGStatisticsPerspective(DFGPerspective):
         
         
         self.color_by = 'count'
-        self.stats = self._compute_stats(activity_events)
+        self.stats = self._compute_stats(activity_events, *stats_args, **stats_kwargs)
         self.stats['label_str'] = self.stats.apply(self._format_label_str, axis=1)
         self.node_label = self.stats.set_index('activity')['label_str'].to_dict()
         
     
-    def _compute_stats(self, activity_events):
+    def _compute_stats(self, activity_events, *args, **kwargs):
         result = []
         for activity, events_df in activity_events.items():
             count = events_df.shape[0]
@@ -65,6 +65,10 @@ class DFGStatisticsPerspective(DFGPerspective):
         Returns:
             str: A hexadecimal color code representing the transaction count.
         """
-        trans_base_color = int(255 - 100 * (trans_count - min_trans_count) / (max_trans_count - min_trans_count + 0.00001))
-        trans_base_color_hex = str(hex(trans_base_color))[2:].upper()
-        return "#" + trans_base_color_hex + trans_base_color_hex + "FF"
+        try:
+            trans_base_color = int(255 - 100 * (trans_count - min_trans_count) / (max_trans_count - min_trans_count + 0.00001))
+            trans_base_color_hex = str(hex(trans_base_color))[2:].upper()
+            return "#" + trans_base_color_hex + trans_base_color_hex + "FF"
+        except ValueError:
+            # this happens if trans_count is NaN or _sum is 0
+            return "#FFFFFF"
