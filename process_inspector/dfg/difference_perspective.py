@@ -36,7 +36,7 @@ class DFGDifferencePerspective(DFGPerspective):
             elif node in self.diff.unique_nodes2:
                 self.node_color[node] = self.node_red_hex
                 
-        for edge, label in self.dfg.edges.items():
+        for edge, _ in self.dfg.edges.items():
             self.edge_color[edge] = self.default_edge_color
             if edge in self.diff.unique_edges1:
                 self.edge_color[edge] = self.edge_green_hex
@@ -44,9 +44,9 @@ class DFGDifferencePerspective(DFGPerspective):
                 self.edge_color[edge] = self.edge_red_hex
             
             self.edge_penwidth[edge] = 1.0
-            self.edge_label[edge] = str(label)
+            self.edge_label[edge] = ""
             
-        for im, label in self.dfg.im.items():
+        for im, _ in self.dfg.im.items():
             self.edge_color[im] = self.default_edge_color
             if im in self.diff.unique_im1:
                 self.edge_color[im] = self.edge_green_hex
@@ -54,9 +54,9 @@ class DFGDifferencePerspective(DFGPerspective):
                 self.edge_color[im] = self.edge_red_hex
             
             self.edge_penwidth[im] = 1.0
-            self.edge_label[im] = str(label)
+            self.edge_label[im] = ""
             
-        for fm, label in self.dfg.fm.items():
+        for fm, _ in self.dfg.fm.items():
             self.edge_color[fm] = self.default_edge_color
             if fm in self.diff.unique_fm1:
                 self.edge_color[fm] = self.edge_green_hex
@@ -64,6 +64,6 @@ class DFGDifferencePerspective(DFGPerspective):
                 self.edge_color[fm] = self.edge_red_hex
             
             self.edge_penwidth[fm] = 1.0
-            self.edge_label[fm] = str(label)
+            self.edge_label[fm] = ""
         
 

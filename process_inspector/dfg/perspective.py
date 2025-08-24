@@ -25,20 +25,20 @@ class DFGPerspective:
         for node in self.node_label:
             self.node_color[node] = "#FFFFFF"
             
-        for edge, label in self.dfg.edges.items():
+        for edge, _ in self.dfg.edges.items():
             self.edge_color[edge] = "#000000"
             self.edge_penwidth[edge] = 1.0
-            self.edge_label[edge] = str(label)
+            self.edge_label[edge] = ""
             
-        for im, label in self.dfg.im.items():
+        for im, _ in self.dfg.im.items():
             self.edge_color[im] = "#000000"
             self.edge_penwidth[im] = 1.0
-            self.edge_label[im] = str(label)
+            self.edge_label[im] = ""
             
-        for fm, label in self.dfg.fm.items():
+        for fm, _ in self.dfg.fm.items():
             self.edge_color[fm] = "#000000"
             self.edge_penwidth[fm] = 1.0
-            self.edge_label[fm] = str(label)
+            self.edge_label[fm] = ""
     
     def prepare_digraph(self, rankdir='LR'):
         """

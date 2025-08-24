@@ -28,13 +28,13 @@ class DFG:
         start = time.time()
         self.nodes = set(activity_log.activity_events.keys())
         # self.edges,self.im,self.fm = pm4py.discover_dfg(activity_log.activity_log)
-        self.edges,self.im,self.fm = self.discover_dfg(activity_log.activity_log)
+        self.edges,self.im,self.fm = self.discover_dfg_counts(activity_log.activity_log)
         end = time.time()
         logger.info(f"[DFG] elapsed: {end - start:.4f} s") 
         self.ready = True  
     
     
-    def discover_dfg(self, activity_log):
+    def discover_dfg_counts(self, activity_log):
         im = Counter()
         fm = Counter()
         edges = Counter()
