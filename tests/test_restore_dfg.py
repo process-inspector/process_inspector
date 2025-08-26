@@ -5,16 +5,16 @@ import sys
 def test():
     # Example test (from root directory):
     
-    data_dir = "tmp/"
+    data_dir = "tests/output"
     
     dfg = DFG()
-    dfg, activity_events, meta_data = load_model_data(data_dir, dfg)
+    dfg, classified_event_traces, meta_data = load_model_data(data_dir, dfg)
 
     print(dfg.nodes)
     print(dfg.edges)
     print(dfg.im)
     print(dfg.fm)
-    print(activity_events)
+    print(classified_event_traces)
     print(meta_data.get_case_data())
     print(meta_data.get_obj_data())
     print(dfg.ready)

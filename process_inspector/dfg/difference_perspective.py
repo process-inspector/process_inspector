@@ -2,9 +2,9 @@ import pandas as pd
 from .add_dfgs import add_dfgs
 from .diff_dfgs import diff_dfgs
 from .dfg import DFG
-from .perspective import DFGPerspective
+from .base_perspective import DFGBasePerspective
 
-class DFGDifferencePerspective(DFGPerspective):
+class DFGDifferencePerspective(DFGBasePerspective):
     def __init__(self, dfg1, dfg2,dfg_combined=None):
         
         if dfg_combined is None:
@@ -36,7 +36,7 @@ class DFGDifferencePerspective(DFGPerspective):
             elif node in self.diff.unique_nodes2:
                 self.node_color[node] = self.node_red_hex
                 
-        for edge, _ in self.dfg.edges.items():
+        for edge in self.dfg.edges:
             self.edge_color[edge] = self.default_edge_color
             if edge in self.diff.unique_edges1:
                 self.edge_color[edge] = self.edge_green_hex
@@ -46,7 +46,7 @@ class DFGDifferencePerspective(DFGPerspective):
             self.edge_penwidth[edge] = 1.0
             self.edge_label[edge] = ""
             
-        for im, _ in self.dfg.im.items():
+        for im in self.dfg.im:
             self.edge_color[im] = self.default_edge_color
             if im in self.diff.unique_im1:
                 self.edge_color[im] = self.edge_green_hex
@@ -56,7 +56,7 @@ class DFGDifferencePerspective(DFGPerspective):
             self.edge_penwidth[im] = 1.0
             self.edge_label[im] = ""
             
-        for fm, _ in self.dfg.fm.items():
+        for fm in self.dfg.fm:
             self.edge_color[fm] = self.default_edge_color
             if fm in self.diff.unique_fm1:
                 self.edge_color[fm] = self.edge_green_hex

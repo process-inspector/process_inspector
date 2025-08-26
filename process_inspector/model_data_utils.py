@@ -5,13 +5,13 @@ import pandas as pd
 from .meta_data import MetaData
         
         
-def save_model_data(data_dir, process_model, activity_events, meta_data=None):
+def save_model_data(data_dir, process_model, classified_event_traces, meta_data=None):
     os.makedirs(data_dir, exist_ok=True)
     process_model.save(data_dir)
     
-    ae_file = os.path.join(data_dir, 'activity_events.pkl')
+    ae_file = os.path.join(data_dir, 'classified_event_traces.pkl')
     with open(ae_file, 'wb') as f:
-        pickle.dump(activity_events, f)
+        pickle.dump(classified_event_traces, f)
     
     if meta_data is not None:
         # Save meta data if provided
@@ -22,7 +22,7 @@ def save_model_data(data_dir, process_model, activity_events, meta_data=None):
         
 def load_model_data(data_dir, process_model):
     process_model.restore(data_dir)
-    ae_file = os.path.join(data_dir, 'activity_events.pkl')
+    ae_file = os.path.join(data_dir, 'classified_event_traces.pkl')
     md_file = os.path.join(data_dir, 'meta_data.pkl')
     
     if not os.path.exists(ae_file) or not os.path.exists(md_file):

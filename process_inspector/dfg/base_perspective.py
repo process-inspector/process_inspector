@@ -2,7 +2,7 @@
 from graphviz import Digraph
 
 
-class DFGPerspective:
+class DFGBasePerspective:
     def __init__(self, dfg):
         """
         Initialize the Perspective with a Directed Flow Graph (DFG).
@@ -25,17 +25,17 @@ class DFGPerspective:
         for node in self.node_label:
             self.node_color[node] = "#FFFFFF"
             
-        for edge, _ in self.dfg.edges.items():
+        for edge in self.dfg.edges:
             self.edge_color[edge] = "#000000"
             self.edge_penwidth[edge] = 1.0
             self.edge_label[edge] = ""
             
-        for im, _ in self.dfg.im.items():
+        for im in self.dfg.im:
             self.edge_color[im] = "#000000"
             self.edge_penwidth[im] = 1.0
             self.edge_label[im] = ""
             
-        for fm, _ in self.dfg.fm.items():
+        for fm in self.dfg.fm:
             self.edge_color[fm] = "#000000"
             self.edge_penwidth[fm] = 1.0
             self.edge_label[fm] = ""
@@ -64,13 +64,13 @@ class DFGPerspective:
         
         graph.node(end, shape='doublecircle', fontsize="30")
 
-        for activity, val in self.dfg.im.items():
+        for activity in self.dfg.im:
             graph.edge(start, activity, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
-        for edge, _ in self.dfg.edges.items():
+        for edge in self.dfg.edges:
             graph.edge(edge[0], edge[1], label=self.edge_label[edge], penwidth=str(self.edge_penwidth[edge]), color=self.edge_color[edge])
 
-        for activity, val in self.dfg.fm.items():
+        for activity in self.dfg.fm:
             graph.edge(activity, end, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
         return graph

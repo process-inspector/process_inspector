@@ -1,12 +1,11 @@
 from .dfg import DFG
-from collections import Counter
 import pandas as pd
 
 def add_dfgs(*dfgs):
     combined_nodes = set()
-    combined_edges = Counter()
-    combined_im = Counter()
-    combined_fm = Counter()
+    combined_edges = set()
+    combined_im = set()
+    combined_fm = set()
     #complexity: O(len(dfgs)*max_num_edges)
     for dfg in dfgs:
         combined_nodes.update(dfg.nodes)

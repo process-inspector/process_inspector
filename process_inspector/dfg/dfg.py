@@ -21,32 +21,28 @@ class DFG:
         self.ready = False
         
         if activity_log:
-            self.construct(activity_log)
+            # self.construct(activity_log)
+            self.nodes, self.im, self.fm, self.edges = self.construct_dfg(activity_log)
             
     
-    def construct(self, activity_log):
-        start = time.time()
-        self.nodes = set(activity_log.activity_events.keys())
-        # self.edges,self.im,self.fm = pm4py.discover_dfg(activity_log.activity_log)
-        self.edges,self.im,self.fm = self.discover_dfg_counts(activity_log.activity_log)
-        end = time.time()
-        logger.info(f"[DFG] elapsed: {end - start:.4f} s") 
-        self.ready = True  
-    
-    
-    def discover_dfg_counts(self, activity_log):
-        im = Counter()
-        fm = Counter()
-        edges = Counter()
-        for activit_trace, count in activity_log.items():
-            im[activit_trace[0]] += count
-            fm[activit_trace[-1]] += count
+    def construct_dfg(self, activity_log):
+        nodes = activity_log.vocabulary
+        im = set()
+        fm = set()
+        edges = set()
+        
+        for activit_trace, count in activity_log.activity_language.items():
+            im.add(activit_trace[0])
+            fm.add(activit_trace[-1])
             
             for i in range(len(activit_trace) - 1):
                 edge = (activit_trace[i], activit_trace[i + 1])
-                edges[edge] += count
-                
-        return edges, im, fm
+                edges.add(edge)
+        
+        self.ready = True        
+        return nodes, im, fm, edges
+        
+        
         
     def save(self, data_dir):
         os.makedirs(data_dir, exist_ok=True)

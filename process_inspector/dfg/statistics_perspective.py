@@ -1,7 +1,7 @@
 import pandas as pd
-from .perspective import DFGPerspective
+from .base_perspective import DFGBasePerspective
 
-class DFGStatisticsPerspective(DFGPerspective):
+class DFGStatisticsPerspective(DFGBasePerspective):
     def __init__(self, dfg, activity_events, *stats_args, **stats_kwargs):
         super().__init__(dfg)
         

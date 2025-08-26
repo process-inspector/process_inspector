@@ -7,12 +7,41 @@ from functools import partial
 from .logging_config import logger
 
 class ActivityLog:
+    def __init__(self, event_log, classifier_fn, **kwargs):
+        self.classifier_fn = classifier_fn
+        
+        self.el_f = {}
+        self.activity_language = {}
+        self.vocabulary = set()
+        
+        self._prepare_serial(event_log, **kwargs)
+        
+    def _prepare_serial(self, event_log, **kwargs):
+        for case, event_trace in event_log.event_traces.items():
+            df = event_trace.copy()
+            df['el:activity'] = df.apply(lambda x: self.classifier_fn(x, **kwargs), axis=1)
+            df = df[df['el:activity'].notna()]
+            self.el_f[case] = df
+            
+            activity_trace = tuple(df['el:activity'])
+            try:
+                self.activity_language[activity_trace] += 1
+            except KeyError:
+                self.activity_language[activity_trace] = 1
+                
+        self.n_variants = len(self.activity_language)
+        self.vocabulary = set().union(*self.activity_language.keys())
+
+class ActivityLog1:
     def __init__(self, event_log, n_cpu, classifier_fn, **kwargs):
         self.n_cpu = n_cpu
         self.classifier_fn = classifier_fn
         
-        self.activity_log = {}
-        self.activity_events = None
+        self.activity_log = {} #language
+        
+        self.activity_events = None 
+        self.activities = None #vocabulary
+        self.activity_connections = None # weights
         
         self.n_variants = 0
         self.n_activities = 0
@@ -24,6 +53,17 @@ class ActivityLog:
         for case, trace_df in event_log.event_log:
             trace_df['el:activity'] = trace_df.apply(lambda x: self.classifier_fn(x, **kwargs), axis=1)
             trace_df = trace_df[trace_df['el:activity'].notna()]
+            
+            # start = trace_df.iloc[0].copy()
+            # start[:] = np.nan
+            # start['el:activity'] = None
+            # trace_df = pd.concat([pd.DataFrame([start]), trace_df], ignore_index=True)
+            # trace_df["next_activity"] = trace_df['el:activity'].shift(-1)
+            # trace_df["next_time"] = trace_df['time'].shift(-1)
+            # trace_df["next_flops"] = trace_df['flops'].shift(-1)
+            
+            
+            # print(trace_df)
             activity_trace = tuple(trace_df['el:activity'])
             # print(f"Case: {case}, Activities: {activity_trace}")
             try:
@@ -35,6 +75,8 @@ class ActivityLog:
             
         df = pd.concat(activity_events, ignore_index=True)  
         self.activity_events = df.groupby('el:activity')
+        # self.activity_connections = df.groupby(['el:activity', 'next_activity'])
+        
         self.activity_events = {activity: df for activity, df in self.activity_events}  # Convert to dict for easier access
         
         self.n_variants = len(self.activity_log)
