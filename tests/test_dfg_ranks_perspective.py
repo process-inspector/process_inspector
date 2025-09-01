@@ -32,9 +32,6 @@ def test():
     dfg = DFG(activity_log)
     reverse_maps = DFGReverseMaps(activity_log)
     
-    
-    
-    
     perspective = DFGRanksPerspective(dfg, reverse_maps, meta_data, obj_key='alg', obj_perf_key='duration')
     perspective.create_style()
     graph = perspective.prepare_digraph(rankdir='TD')
