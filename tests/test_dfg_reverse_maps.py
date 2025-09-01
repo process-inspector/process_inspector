@@ -3,7 +3,7 @@ from linnea_inspector.classifiers.f_call import f_call
 from process_inspector.dfg.dfg import DFG
 from process_inspector.event_log import EventLog
 from process_inspector.activity_log import ActivityLog
-from process_inspector.model_data_utils import save_model_data
+from process_inspector.dfg.reverse_maps import DFGReverseMaps
 
 import sys
 import os
@@ -15,20 +15,22 @@ def test():
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
-    activity_log = ActivityLog(event_log, f_call)    
-    dfg = DFG(activity_log)
-    print(dfg.im)
-    print(dfg.fm)
-    print(dfg.edges)
+    activity_log = ActivityLog(event_log, f_call)
+    reverse_map = DFGReverseMaps(activity_log)
     
+    for node, df in reverse_map.activities_map.items():
+        print(f"Node: {node}, DataFrame:\n {df}")
+        break
+ 
+    print(reverse_map.edges_map[('trsv', '__END__')])
+    print(reverse_map.edges_map[('trsv', 'trsm')])
+    print(reverse_map.edges_map[('__START__', 'potrf')])
     
-    outdir = os.path.join('tests/output')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
-        
-    save_model_data(outdir, dfg, activity_log.classified_event_traces, meta_data)
+    print(reverse_map.edges_map.keys())
     print("SUCCESS")
     
 
+    
+    
 if __name__ == "__main__":
     test()

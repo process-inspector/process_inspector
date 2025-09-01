@@ -8,105 +8,70 @@ from collections import Counter
 import pickle
 import os
 from .logging_config import logger
+from types import SimpleNamespace
 
 
 class DFG:
-    def __init__(self,activity_log=None):
+    def __init__(self,activity_log):
         self.nodes = None
         self.edges = None
-        self.im = None
-        self.fm = None
-        
-        
-        self.ready = False
-        
-        if activity_log:
-            # self.construct(activity_log)
-            self.nodes, self.im, self.fm, self.edges = self.construct_dfg(activity_log)
+                        
+        self.nodes, self.edges = self._construct_dfg(activity_log)
             
     
-    def construct_dfg(self, activity_log):
-        nodes = activity_log.vocabulary
-        im = set()
-        fm = set()
+    def _construct_dfg(self, activity_log):
+        nodes = activity_log.activities | {'__START__', '__END__'}
         edges = set()
         
         for activit_trace, count in activity_log.activity_language.items():
-            im.add(activit_trace[0])
-            fm.add(activit_trace[-1])
+            edges.add(('__START__', activit_trace[0]))
             
             for i in range(len(activit_trace) - 1):
                 edge = (activit_trace[i], activit_trace[i + 1])
                 edges.add(edge)
-        
-        self.ready = True        
-        return nodes, im, fm, edges
-        
-        
-        
-    def save(self, data_dir):
-        os.makedirs(data_dir, exist_ok=True)
-        dfg_file = os.path.join(data_dir, 'dfg.pkl')
-        try:
-            if self.ready:
-                with open(dfg_file, 'wb') as f:
-                    pickle.dump({'nodes': self.nodes, 'edges':self.edges, 'im':self.im, 'fm':self.fm}, f)
-                logger.info(f"DFG saved to {dfg_file}")
-                return True
-            else:
-                logger.error("DFG not initialized, cannot save")
-        except Exception as e:
-            logger.error(f"Error saving DFG: {e}")
 
-        return False        
+            edges.add((activit_trace[-1], '__END__'))
+        
+        return nodes, edges
     
-    def restore(self, data_dir):
-        dfg_file = os.path.join(data_dir, 'dfg.pkl')
+    def __add__(self, other):
+        if not isinstance(other, DFG):
+            raise ValueError("Can only add another DFG instance.")
         
-        if not os.path.exists(dfg_file):
-            logger.error(f"DFG file {dfg_file} does not exist.")
-            raise FileNotFoundError(f"DFG file {dfg_file} does not exist.")
+        new_dfg = DFG.__new__(DFG)
+        new_dfg.nodes = self.nodes | other.nodes
+        new_dfg.edges = self.edges | other.edges
         
-        try:
-            with open(dfg_file, 'rb') as f:
-                data = pickle.load(f)
-                self.nodes = data['nodes']
-                self.edges = data['edges']
-                self.im = data['im']
-                self.fm = data['fm']
-            logger.info(f"DFG restored from {dfg_file}")
-            self.ready = True
-            
-        except Exception as e:
-            logger.error(f"Error restoring DFG: {e}")
-            raise e
-        
-        
-
-# if __name__ == "__main__":
-#     import logging
-#     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
+        return new_dfg
     
-#     import pandas as pd
-#     from .mappings.swlibs import f_swlibs
-#     from .mappings.pathstrings import f_pathstrings
-#     paths = [
-#         ("/proj/nobackup/", "/proj"),
-#         ("/home/", "/home"),
-#         ("/dev/shm/", "/dev/shm"),
-#         ("/sys/", "/sys"),
-#         ("/proc/", "/proc"),
-#     ]
-    
-#     from .activity_log import ActivityLog
+    def diff(self, other):
+        if not isinstance(other, DFG):
+            raise TypeError("Unsupported operand type(s) for -: 'DFG' and '{}'".format(type(other).__name__))
         
-#     el = pd.read_pickle("tests/logs/sample_el.pkl")
-#     # activity_log = ActivityLog(el, 18, f_swlibs)
-#     activity_log = ActivityLog(el, 4, f_pathstrings,paths=paths)
+        # Use a helper function for clarity, or put logic directly here
+        def get_unique_elements(set1, set2):
+            unique1 = [item for item in set1 if item not in set2]
+            unique2 = [item for item in set2 if item not in set1]
+            return unique1, unique2
 
-#     dfg = DFG(activity_log.activity_log)
-#     print(dfg.dfg)
+        # Calculate differences for all attributes
+        unique_nodes1, unique_nodes2 = get_unique_elements(self.nodes, other.nodes)
+        unique_edges1, unique_edges2 = get_unique_elements(self.edges, other.edges)
+        
+        # Create a dictionary to hold the results
+        diff_dict = {
+            "unique_nodes1": unique_nodes1,
+            "unique_nodes2": unique_nodes2,
+            "unique_edges1": unique_edges1,
+            "unique_edges2": unique_edges2,
+        }
+        
+        # Return the result as a SimpleNamespace
+        return SimpleNamespace(**diff_dict)
+        
+        
+    
+        
 
     
     

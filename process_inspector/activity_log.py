@@ -2,7 +2,6 @@ import time
 import numpy as np
 import multiprocessing as mp
 import pandas as pd
-# import pm4py
 from functools import partial
 from .logging_config import logger
 
@@ -10,9 +9,14 @@ class ActivityLog:
     def __init__(self, event_log, classifier_fn, **kwargs):
         self.classifier_fn = classifier_fn
         
-        self.el_f = {}
+        self.c_event_log = {}
         self.activity_language = {}
-        self.vocabulary = set()
+        self.activities = set()
+        self.n_variants = 0
+        
+        self.case_key = event_log.case_key
+        self.order_key = event_log.order_key
+        self.obj_key = event_log.obj_key
         
         self._prepare_serial(event_log, **kwargs)
         
@@ -21,7 +25,7 @@ class ActivityLog:
             df = event_trace.copy()
             df['el:activity'] = df.apply(lambda x: self.classifier_fn(x, **kwargs), axis=1)
             df = df[df['el:activity'].notna()]
-            self.el_f[case] = df
+            self.c_event_log[case] = df
             
             activity_trace = tuple(df['el:activity'])
             try:
@@ -30,7 +34,33 @@ class ActivityLog:
                 self.activity_language[activity_trace] = 1
                 
         self.n_variants = len(self.activity_language)
-        self.vocabulary = set().union(*self.activity_language.keys())
+        self.activities = set().union(*self.activity_language.keys())
+        
+        
+    def __add__(self, other):
+        if not isinstance(other, ActivityLog):
+            raise ValueError("Can only add another ActivityLog instance.")
+        
+        if self.case_key != other.case_key or self.order_key != other.order_key or self.obj_key != other.obj_key or self.classifier_fn != other.classifier_fn:
+            raise ValueError("Both ActivityLog instances must have the same case_key, order_key, obj_key and classifier.")
+        
+        #check if keys of c_event_log do not overlap
+        overlapping_keys = set(self.c_event_log.keys()).intersection(set(other.c_event_log.keys()))
+        if overlapping_keys:
+            raise ValueError(f"Cannot add ActivityLog instances with overlapping case keys: {overlapping_keys}")
+        
+        self.c_event_log.update(other.c_event_log)
+        
+        for activity_trace, count in other.activity_language.items():
+            if activity_trace in self.activity_language:
+                self.activity_language[activity_trace] += count
+            else:
+                self.activity_language[activity_trace] = count
+                
+        self.n_variants = len(self.activity_language)
+        self.activities = set().union(*self.activity_language.keys())
+        
+        return self
 
 class ActivityLog1:
     def __init__(self, event_log, n_cpu, classifier_fn, **kwargs):

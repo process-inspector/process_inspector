@@ -11,36 +11,27 @@ class DFGBasePerspective:
             dfg: The Directed Flow Graph to be used in this perspective.
         """
         self.dfg = dfg
-        self.node_label = {}
-        self.node_color = {}
+        self.activity_label = {}
+        self.activity_color = {}
         self.edge_color = {}
         self.edge_penwidth = {}
         self.edge_label = {}
         
     
     def create_style(self):
-        for activity in self.dfg.nodes:
-            self.node_label[activity] = activity
+        for node in self.dfg.nodes:
+            if not node == '__START__' and not node == '__END__':
+                self.activity_label[node] = node
+                self.activity_color[node] = "#FFFFFF"
         
-        for node in self.node_label:
-            self.node_color[node] = "#FFFFFF"
             
         for edge in self.dfg.edges:
             self.edge_color[edge] = "#000000"
             self.edge_penwidth[edge] = 1.0
             self.edge_label[edge] = ""
-            
-        for im in self.dfg.im:
-            self.edge_color[im] = "#000000"
-            self.edge_penwidth[im] = 1.0
-            self.edge_label[im] = ""
-            
-        for fm in self.dfg.fm:
-            self.edge_color[fm] = "#000000"
-            self.edge_penwidth[fm] = 1.0
-            self.edge_label[fm] = ""
+                        
     
-    def prepare_digraph(self, rankdir='LR'):
+    def prepare_digraph(self, rankdir='LR', graph=None):
         """
         Prepare a Directed Graph (Digraph) representing the process flow.
 
@@ -51,26 +42,19 @@ class DFGBasePerspective:
             logger.error("DFG is not available.")
             return None
         
-        graph = Digraph(strict=True, engine='dot', format='png')
+        if graph is None:
+            graph = Digraph(strict=True, engine='dot', format='png')
         graph.attr(rankdir=rankdir)
-        start = "<&#9679;>"
-        end = "<&#9632;>"
-
         graph.node_attr['shape'] = 'box'
-        graph.node(start, shape='circle', fontsize="30")
         
-        for activity in self.dfg.nodes:                      
-            graph.node(activity, label=self.node_label[activity], style='filled', fillcolor=self.node_color[activity], fontsize='12')
+        graph.node('__START__', label="<&#9679;>", shape='circle', fontsize="30")
+        for node in self.dfg.nodes:
+            if not node == '__START__' and not node == '__END__':                
+                graph.node(node, label=self.activity_label[node], style='filled', fillcolor=self.activity_color[node], fontsize='12')        
+        graph.node('__END__', label="<&#9632;>", shape='doublecircle', fontsize="30")
         
-        graph.node(end, shape='doublecircle', fontsize="30")
-
-        for activity in self.dfg.im:
-            graph.edge(start, activity, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
-
         for edge in self.dfg.edges:
             graph.edge(edge[0], edge[1], label=self.edge_label[edge], penwidth=str(self.edge_penwidth[edge]), color=self.edge_color[edge])
 
-        for activity in self.dfg.fm:
-            graph.edge(activity, end, label=self.edge_label[activity], penwidth=str(self.edge_penwidth[activity]), color=self.edge_color[activity])
 
         return graph
