@@ -12,7 +12,7 @@ class DFGStatisticsPerspective(DFGBasePerspective):
         
         self.color_by = 'count'
         
-        self.activities_stats = self._compute_node_stats(reverse_maps, *stats_args, **stats_kwargs)
+        self.activities_stats = self._compute_activities_stats(reverse_maps, *stats_args, **stats_kwargs)
         self.activities_stats['label_str'] = self.activities_stats.apply(self._format_activity_label_str, axis=1)
         self.activity_label = self.activities_stats.set_index('activity')['label_str'].to_dict()
         
@@ -22,7 +22,7 @@ class DFGStatisticsPerspective(DFGBasePerspective):
         
         
     
-    def _compute_node_stats(self, reverse_maps, *args, **kwargs):
+    def _compute_activities_stats(self, reverse_maps, *args, **kwargs):
         result = []
         for activity, df in reverse_maps.activities_map.items():
             count = df.shape[0]
