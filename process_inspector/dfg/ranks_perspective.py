@@ -19,8 +19,8 @@ class DFGRanksPerspective(DFGBasePerspective):
         self.total_variants = self.meta_data.get_case_data()[obj_key].nunique()
         self.obj_ranks = compute_meta_data_ranks(self.meta_data.get_case_data(), group_by=obj_key, on=obj_perf_key)
         
-        self.activity_rank_score = self.compute_activities_rank_score(obj_key='alg')
-        self.edge_rank_score = self.compute_edges_rank_score(obj_key='alg')
+        self.activity_rank_score = self.compute_activities_rank_score(obj_key=obj_key)
+        self.edge_rank_score = self.compute_edges_rank_score(obj_key=obj_key)
         
     def create_style(self):       
         max_rank_score = max(self.activity_rank_score.values())    
