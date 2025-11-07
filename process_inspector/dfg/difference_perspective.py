@@ -1,6 +1,4 @@
 import pandas as pd
-from .add_dfgs import add_dfgs
-from .diff_dfgs import diff_dfgs
 from .dfg import DFG
 from .base_perspective import DFGBasePerspective
 
