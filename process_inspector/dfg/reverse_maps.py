@@ -15,7 +15,11 @@ class DFGReverseMaps:
             raise ValueError("next_attrs should be a list of attribute names.")
         self.next_attrs = self.case_key + [self.obj_key] + ['el:activity',] + next_attrs
         
+        if not activity_log.c_event_log:
+            raise ValueError("Activity log is empty; i.e., only empty traces.")
+            
         self._prepare_data(activity_log.c_event_log)
+        
         
         
         

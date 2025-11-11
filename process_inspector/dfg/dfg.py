@@ -24,6 +24,10 @@ class DFG:
         edges = set()
         
         for activit_trace, count in activity_log.activity_language.items():
+            if not activit_trace:
+                # empty trace
+                continue
+            
             edges.add(('__START__', activit_trace[0]))
             
             for i in range(len(activit_trace) - 1):

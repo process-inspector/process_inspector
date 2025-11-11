@@ -25,7 +25,9 @@ class ActivityLog:
             df = event_trace.copy()
             df['el:activity'] = df.apply(lambda x: self.classifier_fn(x, **kwargs), axis=1)
             df = df[df['el:activity'].notna()]
-            self.c_event_log[case] = df
+            
+            if not df.empty:
+                self.c_event_log[case] = df
             
             activity_trace = tuple(df['el:activity'])
             try:
