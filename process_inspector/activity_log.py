@@ -14,14 +14,14 @@ class ActivityLog:
         self.activities = set()
         self.n_variants = 0
         
-        self.case_key = event_log.case_key
-        self.order_key = event_log.order_key
-        self.obj_key = event_log.obj_key
+        # self.case_key = event_log.case_key
+        # self.order_key = event_log.order_key
+        # self.obj_key = event_log.obj_key
         
         self._prepare_serial(event_log, **kwargs)
         
     def _prepare_serial(self, event_log, **kwargs):
-        for case, event_trace in event_log.event_traces.items():
+        for case, event_trace in event_log.items():
             df = event_trace.copy()
             df['el:activity'] = df.apply(lambda x: self.classifier_fn(x, **kwargs), axis=1)
             df = df[df['el:activity'].notna()]
@@ -43,8 +43,8 @@ class ActivityLog:
         if not isinstance(other, ActivityLog):
             raise ValueError("Can only add another ActivityLog instance.")
         
-        if self.case_key != other.case_key or self.order_key != other.order_key or self.obj_key != other.obj_key or self.classifier_fn != other.classifier_fn:
-            raise ValueError("Both ActivityLog instances must have the same case_key, order_key, obj_key and classifier.")
+        # if self.case_key != other.case_key or self.order_key != other.order_key or self.obj_key != other.obj_key or self.classifier_fn != other.classifier_fn:
+        #     raise ValueError("Both ActivityLog instances must have the same case_key, order_key, obj_key and classifier.")
         
         #check if keys of c_event_log do not overlap
         overlapping_keys = set(self.c_event_log.keys()).intersection(set(other.c_event_log.keys()))

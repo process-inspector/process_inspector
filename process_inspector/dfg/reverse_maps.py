@@ -6,14 +6,14 @@ class DFGReverseMaps:
         self.activities_map = None # I_v
         self.edges_map = None # I_d
         
-        self.case_key = activity_log.case_key
-        self.order_key = activity_log.order_key
-        self.obj_key = activity_log.obj_key
+        # self.case_key = activity_log.case_key
+        # self.order_key = activity_log.order_key
+        # self.obj_key = activity_log.obj_key
         
         # check if next_atts is a list
         if not isinstance(next_attrs, list):
             raise ValueError("next_attrs should be a list of attribute names.")
-        self.next_attrs = self.case_key + [self.obj_key] + ['el:activity',] + next_attrs
+        self.next_attrs =  ['el:activity',] + next_attrs
         
         if not activity_log.c_event_log:
             raise ValueError("Activity log is empty; i.e., only empty traces.")
