@@ -14,11 +14,11 @@ def test2():
     
     event_data, meta_data = prepare(trace_file1)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log1 = ActivityLog(event_log, f_call)    
+    activity_log1 = ActivityLog(event_log.event_traces, f_call)    
     
     event_data, meta_data = prepare(trace_file2)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log2 = ActivityLog(event_log, f_call)
+    activity_log2 = ActivityLog(event_log.event_traces, f_call)
     
     activity_log = activity_log1 + activity_log2    
     
@@ -39,7 +39,7 @@ def test1():
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     print(f"Num events: {event_log.n_events}, Num cases: {event_log.n_cases}")
     
-    activity_log = ActivityLog(event_log, f_call) 
+    activity_log = ActivityLog(event_log.event_traces, f_call) 
     
 
     

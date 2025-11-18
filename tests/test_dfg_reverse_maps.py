@@ -15,7 +15,7 @@ def test():
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
-    activity_log = ActivityLog(event_log, f_call)
+    activity_log = ActivityLog(event_log.event_traces, f_call)
     reverse_map = DFGReverseMaps(activity_log)
     
     for node, df in reverse_map.activities_map.items():

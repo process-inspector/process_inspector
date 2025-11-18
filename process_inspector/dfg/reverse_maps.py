@@ -1,6 +1,13 @@
 import numpy as np
 import pandas as pd
 
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message="The behavior of DataFrame concatenation with empty or all-NA entries is deprecated",
+    category=FutureWarning,
+)
+
 class DFGReverseMaps:
     def __init__(self, activity_log, next_attrs = []):
         self.activities_map = None # I_v
@@ -33,13 +40,13 @@ class DFGReverseMaps:
             df_activities_map.append(df.copy())
             
             start = df.iloc[0].copy()
-            start[:] = np.nan
+            start[:] = np.nan # this step results in future warning
             start['el:activity'] = '__START__'
             
             end = df.iloc[-1].copy()
-            end[:] = np.nan
+            end[:] = np.nan # this step results in future warning
             end['el:activity'] = '__END__'
-            
+    
             df_ = pd.concat([pd.DataFrame([start]), df, pd.DataFrame([end])], ignore_index=True)
 
             for col in self.next_attrs:

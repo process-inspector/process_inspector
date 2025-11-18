@@ -13,12 +13,12 @@ def test_diff_dfgs():
     
     event_data, meta_data = prepare(trace_file1)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log = ActivityLog(event_log, f_call)    
+    activity_log = ActivityLog(event_log.event_traces, f_call)    
     dfg1 = DFG(activity_log)
     
     event_data, meta_data = prepare(trace_file2)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log = ActivityLog(event_log, f_call)    
+    activity_log = ActivityLog(event_log.event_traces, f_call)    
     dfg2 = DFG(activity_log)
     
     diff = dfg1.diff(dfg2)
@@ -33,12 +33,12 @@ def test_add_dfgs():
     
     event_data, meta_data = prepare(trace_file1)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log = ActivityLog(event_log, f_call)    
+    activity_log = ActivityLog(event_log.event_traces, f_call)    
     dfg1 = DFG(activity_log)
     
     event_data, meta_data = prepare(trace_file2)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
-    activity_log = ActivityLog(event_log, f_call)    
+    activity_log = ActivityLog(event_log.event_traces, f_call)    
     dfg2 = DFG(activity_log)
     
     dfg = dfg1 + dfg2
@@ -55,7 +55,7 @@ def test():
     event_data, meta_data = prepare(trace_file)
     event_log = EventLog(event_data, case_key=['alg','iter'], order_key='time', obj_key='alg')
     
-    activity_log = ActivityLog(event_log, f_call)    
+    activity_log = ActivityLog(event_log.event_traces, f_call)    
     dfg = DFG(activity_log)
     print(dfg.nodes)
     print(dfg.edges)
