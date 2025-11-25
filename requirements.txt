@@ -1,4 +1,4 @@
 numpy
 pandas
 graphviz
-partial_ranker @ git+https://github.com/HPAC/PartialRanker
+partial_ranker @ git+https://github.com/HPAC/PartialRanker@v1.1
