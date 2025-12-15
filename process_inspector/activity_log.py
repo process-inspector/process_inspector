@@ -6,19 +6,17 @@ from functools import partial
 from .logging_config import logger
 
 class ActivityLog:
-    def __init__(self, event_log, classifier_fn, **kwargs):
-        self.classifier_fn = classifier_fn
+    def __init__(self, event_log=None, classifier_fn=None, **kwargs):
         
+        self.classifier_fn = None
         self.c_event_log = {}
         self.activity_language = {}
         self.activities = set()
         self.n_variants = 0
         
-        # self.case_key = event_log.case_key
-        # self.order_key = event_log.order_key
-        # self.obj_key = event_log.obj_key
-        
-        self._prepare_serial(event_log, **kwargs)
+        if event_log is not None and classifier_fn is not None:
+            self.classifier_fn = classifier_fn
+            self._prepare_serial(event_log, **kwargs)
         
     def _prepare_serial(self, event_log, **kwargs):
         for case, event_trace in event_log.items():
@@ -38,7 +36,12 @@ class ActivityLog:
         self.n_variants = len(self.activity_language)
         self.activities = set().union(*self.activity_language.keys())
         
-        
+    def restore(self, c_event_log, activity_language):
+        self.c_event_log = c_event_log
+        self.activity_language = activity_language
+        self.n_variants = len(self.activity_language)
+        self.activities = set().union(*self.activity_language.keys())
+    
     def __add__(self, other):
         if not isinstance(other, ActivityLog):
             raise ValueError("Can only add another ActivityLog instance.")

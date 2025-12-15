@@ -58,14 +58,20 @@ def test1():
     
     # # print(activity_events.get_group('potrf'))  
     
-    outdir = os.path.join('tests/output')
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
+    al2 = ActivityLog()
+    al2.restore(activity_log.c_event_log, activity_log.activity_language)
+    print(al2.c_event_log.keys())
+    print(al2.activity_language)
+    print(al2.activities)
+    
+    # outdir = os.path.join('tests/output')
+    # if not os.path.exists(outdir):
+    #     os.makedirs(outdir)
         
-    save_model_data(outdir, activity_log, meta_data)
+    # save_model_data(outdir, activity_log, meta_data)
     
         
-    print(f"Num activities / Activities set: {len(activity_log.activities)}, Num variants: {activity_log.n_variants}")
+    # print(f"Num activities / Activities set: {len(activity_log.activities)}, Num variants: {activity_log.n_variants}")
     print("SUCCESS") 
 
 if __name__ == "__main__":
