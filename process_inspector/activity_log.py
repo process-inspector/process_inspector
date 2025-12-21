@@ -17,6 +17,10 @@ class ActivityLog:
         if event_log is not None and classifier_fn is not None:
             self.classifier_fn = classifier_fn
             self._prepare_serial(event_log, **kwargs)
+        elif event_log is None and classifier_fn is not None:
+            raise ValueError("If classifier_fn is provided, event_log must also be provided.")
+        elif event_log is not None and classifier_fn is None:
+            raise ValueError("If event_log is provided, classifier_fn must also be provided.")
         
     def _prepare_serial(self, event_log, **kwargs):
         for case, event_trace in event_log.items():
