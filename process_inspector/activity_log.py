@@ -39,6 +39,24 @@ class ActivityLog:
                 
         self.n_variants = len(self.activity_language)
         self.activities = set().union(*self.activity_language.keys())
+    
+    def apply_filter(self, filter_fn):
+        filtered_c_event_log = {}
+        filtered_activity_language = {}
+        
+        for case, df in self.c_event_log.items():
+            filtered_df = df[df.apply(filter_fn, axis=1)]
+            if not filtered_df.empty:
+                filtered_c_event_log[case] = filtered_df
+                
+                activity_trace = tuple(filtered_df['el:activity'])
+                try:
+                    filtered_activity_language[activity_trace] += 1
+                except KeyError:
+                    filtered_activity_language[activity_trace] = 1
+        al = ActivityLog()
+        al.restore(filtered_c_event_log, filtered_activity_language)
+        return al
         
     def restore(self, c_event_log, activity_language):
         self.c_event_log = c_event_log
