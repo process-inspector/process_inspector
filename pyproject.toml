@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "process_inspector"
+version = "1.0.0"
+description = "The core library for synthesising event logs into visualisations for process inspection."
+readme = { file = "README.md", content-type = "text/markdown" }
+
+authors = [
+    { name = "Aravind Sankaran", email = "aravind.sankaran@rwth-aachen.de" }
+]
+
+requires-python = ">3"
+
+classifiers = [
+    "Programming Language :: Python :: 3"
+]
+
+# Equivalent to install_requires=open("requirements.txt").read().splitlines()
+dependencies = [
+    "numpy",
+    "pandas",
+    "graphviz",
+    "pydantic",
+    "partial_ranker @ git+https://github.com/HPAC/PartialRanker@v1.1"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["process_inspector*"]
