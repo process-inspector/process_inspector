@@ -52,15 +52,23 @@ class PMContextBase(ABC):
         total_objs = len(obj_rank)        
         nobjs = len(objs)
         
-        rank_score = -1.0
-        if nobjs != total_objs:
-            rank_score = 0.0
-            for obj in objs:
-                try:
-                    rank_score += obj_rank[obj]
-                except KeyError:
-                    raise KeyError(f"Object '{obj}' not found in object ranks.")
-            rank_score /= nobjs
+        # if an op occurs in all objects, it cannot be discriminated hence return -1.0
+        if nobjs == total_objs:    
+            return -1.0
+        
+        #If all objs are in the same rank, then the rank score is -1.0 since it does not help in discrimination
+        rank_values = set(obj_rank[obj] for obj in obj_rank)
+        if len(rank_values) == 1:
+            return -1.0
+        
+        # all other cases, compute average rank score across objects, normalized by number of objects
+        rank_score = 0.0
+        for obj in objs:
+            try:
+                rank_score += obj_rank[obj]
+            except KeyError:
+                raise KeyError(f"Object '{obj}' not found in object ranks.")
+        rank_score /= nobjs
             
         return rank_score            
         
