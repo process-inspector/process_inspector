@@ -18,9 +18,9 @@ class ObjectContextBase(ABC):
             
     def _compute_partial_ranks(self, bp_data: dict[str, list]):
         partial_ranks = compute_partial_ranks(bp_data, remove_outliers=False)
-        obj_rank = partial_ranks['m1']
-        perf_class = partial_ranks['nranks']
-        return obj_rank, perf_class 
+        # obj_rank = partial_ranks[method]
+        # perf_class = partial_ranks['nranks']
+        return partial_ranks 
 
     
 class PMContextBase(ABC):
@@ -78,7 +78,7 @@ class PMContextBase(ABC):
             partial_ranks = compute_partial_ranks(inverted_m, remove_outliers=False)
         else:
             partial_ranks = compute_partial_ranks(obj_bp, remove_outliers=False)
-        obj_rank = partial_ranks['m1']
-        perf_class = partial_ranks['nranks']
+        # obj_rank = partial_ranks[method]
+        # perf_class = partial_ranks['nranks']
         
-        return obj_rank, perf_class 
+        return partial_ranks 
